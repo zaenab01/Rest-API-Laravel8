@@ -39,7 +39,7 @@ class TransactionController extends Controller
         $validator = Validator::make($request->all(),[
             'title' => ['required'],
             'amount' => ['required', 'numeric'],
-            'type' => ['required', 'in:expense, revenue']
+            'type' => ['required', 'in:expense,revenue']
         ]);
          //jika tidak sesuai aturan validasi maka eror 422
         if ($validator -> fails()){
