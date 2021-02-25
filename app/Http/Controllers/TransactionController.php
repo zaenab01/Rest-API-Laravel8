@@ -82,7 +82,32 @@ class TransactionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+          //membuat aturan input user apa saja
+          $validator = Validator::make($request->all(),[
+            'title' => ['required'],
+            'amount' => ['required', 'numeric'],
+            'type' => ['required', 'in:expense,revenue']
+        ]);
+         //jika tidak sesuai aturan validasi maka eror 422
+        if ($validator -> fails()){
+            return response()->json($validator->errors(), 422);
+        }
+
+        try{
+            $transaction->update($request->all());
+            $response =[
+                'message' => 'Transaction updated ',
+                'data' => $transaction
+            ];
+            return response()->json($response, 200 ); //201 artinya request berhasil dibuat
+
+        }catch (QueryException $e){
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**

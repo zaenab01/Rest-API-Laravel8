@@ -23,3 +23,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/transaction', [TransactionController::class, 'index']);
 
 Route::post('/transaction', [TransactionController::class, 'store']);
+
+Route::put('/transaction/{id}', [TransactionController::class, 'update']);
