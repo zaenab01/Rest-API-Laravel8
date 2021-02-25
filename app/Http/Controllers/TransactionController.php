@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\TransactionController;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+
 
 class TransactionController extends Controller
 {
@@ -13,7 +15,16 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        //mengambil data transaction, lalu diurutkan 
+        $transaction = Transaction::orderBy('time', 'DESC')->get();
+        //menyimpan data yang ditampilkan di array response
+        $response =[
+            'massage' => 'List transaction order by time',
+            'data' => $transaction
+        ];
+
+        return response()->json($response, 200);
+
     }
 
     /**
