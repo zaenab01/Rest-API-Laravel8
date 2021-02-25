@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\TransactionController;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 
 class TransactionController extends Controller
@@ -34,8 +35,31 @@ class TransactionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   //membuat aturan input user apa saja
+        $validator = Validator::make($request->all(),[
+            'title' => ['required'],
+            'amount' => ['required', 'numeric'],
+            'type' => ['required', 'in:expense, revenue']
+        ]);
+         //jika tidak sesuai aturan validasi maka eror 422
+        if ($validator -> fails()){
+            return response()->json($validator->errors(), 422);
+        }
+
+        try{
+            $transaction = Transaction::create($request->all());
+            $response =[
+                'message' => 'Transaction created',
+                'data' => $transaction
+            ];
+            return response()->json($response, 201); //201 artinya request berhasil dibuat
+
+        }catch(QueryException $e){
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+
+        }
     }
 
     /**
