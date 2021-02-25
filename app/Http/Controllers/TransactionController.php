@@ -70,7 +70,14 @@ class TransactionController extends Controller
      */
     public function show($id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+
+        $response =[
+            'massage' => 'Detail transaction resource',
+            'data' => $transaction
+        ];
+
+        return response()->json($response, 200);
     }
 
     /**
@@ -118,6 +125,21 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $transaction = Transaction::findOrFail($id);
+        //membuat aturan input user apa saja
+
+      try{
+          $transaction->delete();
+          $response =[
+              'message' => 'Transaction deleted ',
+          ];
+          return response()->json($response, 200 ); //201 artinya request berhasil dibuat
+
+      }catch (QueryException $e){
+          return response()->json([
+              'message' => "Failed" . $e->errorInfo
+          ]);
+
+      }
     }
 }
